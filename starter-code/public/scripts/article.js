@@ -2,8 +2,10 @@
 
 // REVIEW: Check out all of the functions that we've cleaned up with arrow function syntax.
 
-// TODO: Wrap the entire contents of this file in an IIFE.
+// DONE: Wrap the entire contents of this file in an IIFE.
 // Pass in to the IIFE a module, upon which objects can be attached for later access.
+(function(module){
+
 function Article(opts) {
   // REVIEW: Lets review what's actually happening here, and check out some new syntax!!
   Object.keys(opts).forEach(e => this[e] = opts[e]);
@@ -24,9 +26,11 @@ Article.prototype.toHtml = function() {
 Article.loadAll = rows => {
   rows.sort((a,b) => (new Date(b.publishedOn)) - (new Date(a.publishedOn)));
 
-  // TODO: Refactor this forEach code, by using a `.map` call instead, since want we are trying to accomplish
+  // DONE: Refactor this forEach code, by using a `.map` call instead, since want we are trying to accomplish
   // is the transformation of one colleciton into another.
-
+  Article.all = rows.map(function(ele){
+    return new Article(ele);
+  });
   /* OLD forEach():
   rawData.forEach(function(ele) {
   Article.all.push(new Article(ele));
@@ -59,12 +63,12 @@ Article.fetchAll = callback => {
 
 // TODO: Chain together a `map` and a `reduce` call to get a rough count of all words in all articles.
 Article.numWordsAll = () => {
-  return Article.all.map().reduce()
+  return Article.all.map(articles => articles.body.match(/\S+/g).length).reduce((a,b) => a + b);
 };
 
 // TODO: Chain together a `map` and a `reduce` call to produce an array of unique author names.
 Article.allAuthors = () => {
-  return Article.all.map().reduce();
+  return Article.all.map(articles => articles.author).reduce();
 };
 
 Article.numWordsByAuthor = () => {
@@ -116,3 +120,7 @@ Article.prototype.updateRecord = function(callback) {
     .then(console.log)
     .then(callback);
   };
+
+
+  module.Article = Article;
+  })(window);
