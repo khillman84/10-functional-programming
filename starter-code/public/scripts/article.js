@@ -66,9 +66,15 @@ Article.numWordsAll = () => {
   return Article.all.map(articles => articles.body.match(/\S+/g).length).reduce((a,b) => a + b);
 };
 
-// TODO: Chain together a `map` and a `reduce` call to produce an array of unique author names.
+// DONE: Chain together a `map` and a `reduce` call to produce an array of unique author names.
 Article.allAuthors = () => {
-  return Article.all.map(articles => articles.author).reduce();
+  return Article.all.map(articles => articles.author).reduce((authorNames, name) => {
+    if authorNames.indexof(name) === -1 {
+      console.log('Author name', name);
+      authorNames.push(name);
+    }
+    return authorNames;
+  }, []);
 };
 
 Article.numWordsByAuthor = () => {
